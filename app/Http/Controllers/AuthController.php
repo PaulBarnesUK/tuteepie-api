@@ -8,8 +8,10 @@ use App\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Config;
 
-class AuthController extends ApiController
+class AuthController extends Controller
 {
+    use JsonableTrait;
+
     /**
      * Create a new web token for the user
      *
@@ -21,15 +23,14 @@ class AuthController extends ApiController
 
         // User must have been activated
         if (!$user->activated_at) {
-            return $this->errorResponse(401, Config::get('constants.response_titles.NOT_ACTIVATED'));
+            return $this->errorResponse(401, config('constants.response_titles.UNAUTHORISED'), 'Account is not activated');
         }
 
         // Check if password matches
-        if (!Hash::check($request->password, $user->password)) {
+        if (!Hash::check($request->password, $user->password))
             return response()->json([
                 'message' => 'Password incorrect'
             ], 401);
-        }
 
         $token = $user->createToken('base')->accessToken;
 

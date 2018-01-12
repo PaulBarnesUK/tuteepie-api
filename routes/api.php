@@ -12,7 +12,7 @@ use Illuminate\Http\Request;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-Route::prefix('v1')->group(function() {
+Route::group(['prefix' => 'v1', 'middleware' => 'cors'], function() {
     // Authentication protected routes
     Route::middleware('auth:api')->group(function () {
         Route::get('admin', function() {
@@ -32,12 +32,16 @@ Route::prefix('v1')->group(function() {
         });
     });
 
+    Route::get('/', function() {
+        return response()->json(['someData' => 1, 200]);
+    });
+
     Route::prefix('auth')->group(function() {
         Route::post('/', 'AuthController@create');
     });
 
     Route::prefix('users')->group(function() {
-        Route::post('/', 'UserController@create');
+        Route::post('/', 'UserController@create'); // IP
         Route::patch('/{user}', 'UserController@update');
     });
 });

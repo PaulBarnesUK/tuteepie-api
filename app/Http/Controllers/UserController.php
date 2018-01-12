@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Config;
 
 class UserController extends ApiController
 {
+    use JsonableTrait;
+
     /**
      * POST Request to create a new user.
      * @param Request $request
@@ -59,19 +61,6 @@ class UserController extends ApiController
         return false;
     }
 
-    private function activateUser(User $user, Request $request)
-    {
-        $user->activated_at = Carbon::now();
-
-        if (!$user->save) {
-            return response()->json([
-                'message' => 'Unable to activate user.'
-            ], 500);
-        }
-
-        return response()->json($user, 200);
-    }
-
     public function update(User $user, Request $request)
     {
         // If user is trying to activate account or change password they need to provide a password reset token
@@ -88,7 +77,7 @@ class UserController extends ApiController
 
         if ($resetToken->token !== $request->token) {
             return $this->errorResponse(422,
-                Config::get('constants.response_titles.VALIDATION_ERROR'),
+                config('constants.response_titles.VALIDATION_ERROR'),
                 'Token does not match.');
         }
 
@@ -97,9 +86,8 @@ class UserController extends ApiController
                 return fractal($user, new UserTransformer())->respond(200);
             } else {
                 return $this->errorResponse(500,
-                    Config::get('constants.response_titles.GENERAL_ERROR'),
-                    'Issue when deleting token'
-                );
+                    config('constants.response_titles.GENERAL_ERROR'),
+                    'Issue when deleting token');
             }
         } else {
             return response()->json([

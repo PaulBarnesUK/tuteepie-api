@@ -5,7 +5,7 @@ return [
         'NOT_FOUND' => 'Resource could not be found',
         'VALIDATION_ERROR' => 'A validation error occurred',
         'GENERAL_ERROR' => 'An error occurred',
-        'NOT_ACTIVATED' => 'Account is not activated',
+        'UNAUTHORISED' => 'Not authorised',
         'FORBIDDEN' => 'You do not have authorisation for this action'
     ],
     'travel_seconds_buffer' => 300

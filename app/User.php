@@ -12,6 +12,8 @@ class User extends Authenticatable
 {
     use HasApiTokens, Notifiable, ValidatableTrait;
 
+    protected $dates = ['activated_at'];
+
     /**
      * The attributes that are mass assignable.
      *
