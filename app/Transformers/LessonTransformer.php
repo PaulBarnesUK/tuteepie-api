@@ -7,11 +7,11 @@ use App\Lesson;
 
 class LessonTransformer extends TransformerAbstract
 {
-    /**
-     * A Fractal transformer.
-     *
-     * @return array
-     */
+    protected $defaultIncludes = [
+        'tutor',
+        'student'
+    ];
+
     public function transform(Lesson $lesson)
     {
         return [
@@ -20,5 +20,15 @@ class LessonTransformer extends TransformerAbstract
             'end_time' => $lesson->end_time,
             'duration' => $lesson->duration
         ];
+    }
+
+    public function includeTutor(Lesson $lesson)
+    {
+        return $this->item($lesson->tutor, new TutorTransformer(), 'tutors');
+    }
+
+    public function includeStudent(Lesson $lesson)
+    {
+        return $this->item($lesson->student, new StudentTransformer(), 'students');
     }
 }

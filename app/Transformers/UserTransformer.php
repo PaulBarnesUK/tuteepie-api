@@ -8,6 +8,10 @@ use App\User;
 class UserTransformer extends TransformerAbstract
 {
     protected $dates = ['activated_at'];
+    
+    protected $availableIncludes = [
+        'type'
+    ];
 
     /**
      * A Fractal transformer.
@@ -24,5 +28,17 @@ class UserTransformer extends TransformerAbstract
             'created_at' => $user->created_at,
             'updated_at' => $user->updated_at
         ];
+    }
+
+    public function includeType(User $user)
+    {
+        switch ($user->type()) {
+            case 'student':
+                return $this->item($user->student, new StudentTransformer(), 'student');
+                break;
+            case 'tutor':
+                return $this->item($user->tutor, new TutorTransformer(), 'tutor');
+                break;
+        }
     }
 }

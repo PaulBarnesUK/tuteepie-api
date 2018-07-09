@@ -8,14 +8,10 @@ use App\Student;
 class StudentTransformer extends TransformerAbstract
 {
     protected $defaultIncludes = [
-        'user'
+        'user',
+        'defaultCollectionLocation'
     ];
 
-    /**
-     * A Fractal transformer.
-     *
-     * @return array
-     */
     public function transform(Student $student)
     {
         return [
@@ -31,5 +27,11 @@ class StudentTransformer extends TransformerAbstract
     public function includeTutor(Student $student)
     {
         return $this->item($student->tutor, new TutorTransformer(), 'tutors');
+    }
+
+    public function includeDefaultCollectionLocation(Student $student)
+    {
+        if ($student->defaultCollectionLocation)
+            return $this->item($student->defaultCollectionLocation, new LocationTransformer(), 'locations');
     }
 }

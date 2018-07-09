@@ -26,7 +26,7 @@ class UserController extends ApiController
         $user = new User();
         if (!$user->validate($request->all(), $user->creationRules)) {
             return $user->validationErrorResponse();
-        }
+        }   
 
         $user->name = $request->name;
         $user->email = $request->email;
@@ -81,6 +81,7 @@ class UserController extends ApiController
                 'Token does not match.');
         }
 
+        // Attempt to update the user
         if ($user->updateFields($request->all())) {
             if (PasswordReset::where('email', $user->email)->delete()) {
                 return fractal($user, new UserTransformer())->respond(200);

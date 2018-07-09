@@ -32,27 +32,22 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
-    /**
-     * The validation rules for creating a new user
-     *
-     * @var array
-     */
     public $creationRules = [
         'name' => 'required|min:4',
         'email' => 'required|email|unique:users',
         'password' => 'min:8'
     ];
 
-    /**
-     * The validation rules for updating a user
-     *
-     * @var array
-     */
     public $updateRules = [
         'name' => 'min:4',
         'email' => 'email|unique:users',
         'password' => 'min:8',
         'activated_at' => 'date'
+    ];
+
+    public $loginRules = [
+        'email' => 'required|email|exists:users',
+        'password' => 'required'
     ];
 
     public function locations()
@@ -83,5 +78,29 @@ class User extends Authenticatable
         }
 
         return false;
+    }
+
+    public function tutor()
+    {
+        return $this->hasOne('App\Tutor');
+    }
+
+    public function student()
+    {
+        return $this->hasOne('App\Student');
+    }
+
+    /**
+     * Return the relevant user type: tutor or student
+     * 
+     * TODO: Maybe change this to polymorphic relation
+     */
+    public function type()
+    {   
+        if (!is_null($this->student))
+            return 'student';
+
+        if (!is_null($this->tutor))
+            return 'tutor';
     }
 }

@@ -54,6 +54,18 @@ class TutorController extends Controller
     }
 
     /**
+     * Get a list of the tutor's students
+     * 
+     * @param Tutor $tutor
+     */
+
+    public function getStudents(Tutor $tutor)
+    {
+        return fractal()->collection($tutor->students, new StudentTransformer(), 'students')
+            ->respond(200);
+    }
+
+    /**
      * Get a given student assigned to the tutor
      *
      * @param Tutor $tutor
@@ -146,6 +158,10 @@ class TutorController extends Controller
         return true;
     }
 
+    /**
+     * Check that there is sufficient travel time between the last lesson and the proposed new lesson
+     * 
+     */
     protected function checkSufficientTravelTime(Tutor $tutor, Carbon $lessonStartTime, Location $collectionLocation)
     {
         $previousLesson = $tutor->lessons()
